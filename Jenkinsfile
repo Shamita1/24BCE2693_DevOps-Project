@@ -45,16 +45,16 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                echo 'Deploying to Kubernetes cluster...'
-                sh '''
-                    sed -i "s|__IMAGE__|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml
-                    kubectl apply -f k8s/deployment.yaml --validate=false
-                    kubectl apply -f k8s/service.yaml --validate=false
-                    kubectl rollout status deployment/abc-website-deployment
-                '''
-            }
-        }
+    steps {
+        echo 'Deploying to Kubernetes cluster...'
+        sh '''
+            sed -i "s|__IMAGE__|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml
+            kubectl apply -f k8s/deployment.yaml --validate=false
+            kubectl apply -f k8s/service.yaml --validate=false
+            kubectl rollout status deployment/abc-website-deployment
+        '''
+    }
+}
     }
 
     post {
