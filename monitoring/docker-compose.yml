@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  # ---- Nagios Core: monitors host + HTTP service (UP/OK) ----
+  nagios:
+    image: jasonrivers/nagios:latest
+    container_name: nagios
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nagios/conf.d:/opt/nagios/etc/conf.d
+    restart: unless-stopped
+
+  # ---- Graphite: receives and stores metrics ----
+  graphite:
+    image: graphiteapp/graphite-statsd:latest
+    container_name: graphite
+    ports:
+      - "80:80"        # Graphite web UI
+      - "2003-2004:2003-2004"   # Carbon plaintext + pickle receivers
+      - "2023-2024:2023-2024"   # Carbon cache query ports
+      - "8125:8125/udp" # StatsD
+      - "8126:8126"
+    restart: unless-stopped
+
+  # ---- Grafana: visualizes metrics from Graphite ----
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - graphite
+    restart: unless-stopped
