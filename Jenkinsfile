@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')   // Jenkins credential ID (username+password)
         IMAGE_NAME             = "shamitar/abc-technologies-website"
         IMAGE_TAG               = "${env.BUILD_NUMBER}"
-        KUBECONFIG_CRED         = credentials('kubeconfig-file')  // Jenkins "Secret file" credential (optional)
+        
     }
 
     stages {
@@ -44,17 +44,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-    steps {
-        echo 'Deploying to Kubernetes cluster...'
-        sh '''
-            sed -i "s|__IMAGE__|$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml
-            kubectl apply -f k8s/deployment.yaml --validate=false
-            kubectl apply -f k8s/service.yaml --validate=false
-            kubectl rollout status deployment/abc-website-deployment
-        '''
-    }
-}
+        
     }
 
     post {

@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: abc-website
-          image: __IMAGE__          # Jenkins replaces this at deploy time
-          # If deploying manually without Jenkins, replace __IMAGE__ with e.g.
+          image: shamitar/abc-technologies-website:latest          # Jenkins replaces this at deploy time
+          # If deploying manually without Jenkins, replace shamitar/abc-technologies-website:latest with e.g.
           # yourdockerhubuser/abc-technologies-website:latest
           ports:
             - containerPort: 80
